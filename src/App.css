@@ -129,6 +129,9 @@ body {
   border: 1px solid #000;
   cursor: pointer;
   width: 50%;
+  color: #333;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
 .submit-button.loading {
@@ -137,6 +140,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #333;
 }
 
 .spinner {

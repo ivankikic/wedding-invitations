@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+import emailjs from "emailjs-com";
 import "./App.css";
 
 function Invitations() {
@@ -9,6 +10,8 @@ function Invitations() {
   const [containerHeight, setContainerHeight] = useState("100vh");
   const [people, setPeople] = useState([{ id: Date.now(), name: "" }]);
   const [isLoading, setIsLoading] = useState(false);
+
+  emailjs.init("uuPVBUyllUYPK4QH2");
 
   useEffect(() => {
     const updateHeight = () => {
@@ -47,7 +50,7 @@ function Invitations() {
     );
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -55,6 +58,8 @@ function Invitations() {
     const peopleNames = people.map((person) => person.name).join(", ");
     formData.append("People", peopleNames);
     formData.append("Count", people.length.toString());
+    const phone = phoneRef.current ? phoneRef.current.value : "";
+    const name = nameRef.current ? nameRef.current.value : "";
 
     fetch(
       "https://script.google.com/macros/s/AKfycbz4muYmzdeXd0nJAt32DKQsDv6TAgL0xYmSOR9iY7V-r273SwcyZqTCwMDs-M8aeb7G/exec",
@@ -83,6 +88,12 @@ function Invitations() {
       .finally(() => {
         setIsLoading(false);
       });
+
+    await emailjs.send("service_gol57vs", "template_n8gx0il", {
+      from_name: "Website",
+      message: `Phone: ${phone}, Name: ${name}, People: ${peopleNames}`,
+    });
+    setIsLoading(false);
   };
 
   return (
